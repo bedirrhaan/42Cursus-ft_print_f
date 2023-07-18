@@ -15,25 +15,28 @@
 int	ft_printf(const char *str, ...)
 {
 	va_list	args;
-	int		len;
-	int		i;
+	int		leng;
+	int		counter;
+	int		tmp;
 
-	i = 0;
-	len = 0;
+	counter = -1;
+	leng = 0;
 	va_start(args, str);
-	while (str[i])
+	while (str[++counter] != '\0')
 	{
-		if (str[i] == '%' && ft_check(str[i + 1]))
+		if (str[counter] == '%' && ft_check(str[counter + 1]))
 		{
-			len += ft_format(&args, str[i + 1]);
-			i++;
+			tmp = ft_format(&args, str[++counter]);
+			if (tmp == -1)
+				return (-1);
+			leng += tmp - 1;
 		}
-		else if (str[i] != '%')
-			len += ft_putchar(str[i]);
-		i++;
+		else if (ft_putchar(str[counter]) == -1)
+			return (-1);
+		leng++;
 	}
 	va_end(args);
-	return (len);
+	return (leng);
 }
 
 int	ft_check(char str)
